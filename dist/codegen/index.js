@@ -38,7 +38,7 @@ function codegenContractTypings(contract, codegenConfig) {
         'type @ethersproject/providers': ['Listener', 'Provider'],
     }, source) +
         '\n' +
-        `import { ${contract.name}__factory } from "../factories"
+        `import { ${contract.name}__factory } from "../index.ts"
      import { useProvider, useSigner } from "wagmi";
      import { useQuery, useMutation } from "@tanstack/react-query";
     `;
