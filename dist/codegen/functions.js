@@ -33,6 +33,7 @@ function generateFunction(options, fn, contractName, overloadedName) {
   `;
     }
     return `
+  ${generateFunctionDocumentation(fn.documentation)}
   ${`use${fn.name.charAt(0).toUpperCase() + fn.name.slice(1)}Mutation`} = () => {
   const { data: signer } = useSigner();
   return useMutation<ContractReceipt, Error, {${(0, types_1.generateInputTypes)(fn.inputs, { useStructs: true })}}>(
