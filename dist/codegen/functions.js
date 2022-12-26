@@ -23,19 +23,19 @@ function generateFunction(options, fn, contractName, overloadedName) {
     if (options.isStaticCall || fn.stateMutability === 'pure' || fn.stateMutability === 'view') {
         return `
     ${generateFunctionDocumentation(fn.documentation)}
-    ${`use${(0, typechain_1.normalizeName)(fn.name)}`} = (${(0, types_1.generateInputTypes)(fn.inputs, {})}) => {
+    ${`use${(0, typechain_1.normalizeName)(fn.name)}Query`} = (${(0, types_1.generateInputTypes)(fn.inputs, { useStructs: true })}) => {
       const provider = useProvider(this.networkId);
       const contract = ${contractName}__factory.connect(this.contractAddress, provider);
-      return useQuery<${(0, types_1.generateOutputTypes)({}, fn.outputs)}>(["${fn.name}", "${contractName}", ${(0, types_1.generateInputNames)(fn.inputs)}], async () => {
+      return useQuery<${(0, types_1.generateOutputTypes)({ useStructs: true }, fn.outputs)}>(["${fn.name}", "${contractName}", ${(0, types_1.generateInputNames)(fn.inputs)}], async () => {
         return await contract.${fn.name}( ${(0, types_1.generateInputNames)(fn.inputs)});
       });
     };
   `;
     }
     return `
-  ${`use${fn.name.charAt(0).toUpperCase() + fn.name.slice(1)}`} = () => {
+  ${`use${fn.name.charAt(0).toUpperCase() + fn.name.slice(1)}Mutation`} = () => {
   const { data: signer } = useSigner();
-  return useMutation<ContractReceipt, Error, {${(0, types_1.generateInputTypes)(fn.inputs, {})}}>(
+  return useMutation<ContractReceipt, Error, {${(0, types_1.generateInputTypes)(fn.inputs, { useStructs: true })}}>(
     async ({${(0, types_1.generateInputNames)(fn.inputs)}}) => {
         if (!signer) throw new Error('Signer is not set');
         const contract = ${contractName}__factory.connect(this.contractAddress, signer);
