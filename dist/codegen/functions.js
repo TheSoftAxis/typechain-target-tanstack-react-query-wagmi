@@ -20,27 +20,44 @@ function codegenForOverloadedFunctions(options, fns) {
 }
 exports.codegenForOverloadedFunctions = codegenForOverloadedFunctions;
 function generateFunction(options, fn, contractName, overloadedName) {
+    let inputTypes = (0, types_1.generateInputTypes)(fn.inputs, { useStructs: true })
+    let inputNames = (0, types_1.generateInputNames)(fn.inputs)
+
+    if (inputTypes.length) {
+        inputTypes += `, `
+    }
+    if (inputNames.length) {
+        inputNames += `, `
+    }
+    inputNames += `overrides`
+
     if (options.isStaticCall || fn.stateMutability === 'pure' || fn.stateMutability === 'view') {
+        inputTypes += `overrides?: CallOverrides`
         return `
     ${generateFunctionDocumentation(fn.documentation)}
-    ${`use${(0, typechain_1.normalizeName)(fn.name)}Query`} = (${(0, types_1.generateInputTypes)(fn.inputs, { useStructs: true })}) => {
+    ${`use${(0, typechain_1.normalizeName)(fn.name)}Query`} = (${inputTypes}) => {
       const provider = useProvider(this.networkId);
       const contract = ${contractName}__factory.connect(this.contractAddress, provider);
-      return useQuery<${(0, types_1.generateOutputTypes)({ useStructs: true }, fn.outputs)}>(["${fn.name}", "${contractName}", ${(0, types_1.generateInputNames)(fn.inputs)}], async () => {
-        return await contract.${fn.name}( ${(0, types_1.generateInputNames)(fn.inputs)});
+      return useQuery<${(0, types_1.generateOutputTypes)({ useStructs: true }, fn.outputs)}>(["${fn.name}", "${contractName}", ${inputNames}], async () => {
+        return await contract.${fn.name}( ${inputNames});
       });
     };
   `;
+    }
+    if (fn.stateMutability === 'payable') {
+        inputTypes += `overrides?: PayableOverrides & { from?: PromiseOrValue<string> }`
+    } else {
+        inputTypes += `overrides?: Overrides & { from?: PromiseOrValue<string> }`
     }
     return `
   ${generateFunctionDocumentation(fn.documentation)}
   ${`use${fn.name.charAt(0).toUpperCase() + fn.name.slice(1)}Mutation`} = () => {
   const { data: signer } = useSigner();
-  return useMutation<ContractReceipt, Error, {${(0, types_1.generateInputTypes)(fn.inputs, { useStructs: true })}}>(
-    async ({${(0, types_1.generateInputNames)(fn.inputs)}}) => {
+  return useMutation<ContractReceipt, Error, {${inputTypes}}>(
+    async ({${inputNames}}) => {
         if (!signer) throw new Error('Signer is not set');
         const contract = ${contractName}__factory.connect(this.contractAddress, signer);
-        const transaction = await contract.${fn.name} (${(0, types_1.generateInputNames)(fn.inputs)});
+        const transaction = await contract.${fn.name} (${inputNames});
         return transaction.wait()
     }
   );
