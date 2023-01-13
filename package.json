@@ -9,7 +9,7 @@
     "TypeScript",
     "Thesoftaxis"
   ],
-  "version": "0.1.7",
+  "version": "0.1.8",
   "license": "MIT",
   "repository": "https://github.com/TheSoftAxis/typechain-target-tanstack-react-query-wagmi",
   "main": "./dist/index.js",
