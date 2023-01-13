@@ -23,12 +23,12 @@ function generateFunction(options, fn, contractName, overloadedName) {
     let inputTypes = (0, types_1.generateInputTypes)(fn.inputs, { useStructs: true })
     let inputNames = (0, types_1.generateInputNames)(fn.inputs)
 
-    if (inputTypes.length) {
-        inputTypes += `, `
-    }
-    if (inputNames.length) {
-        inputNames += `, `
-    }
+    // if (inputTypes.length) {
+    //     inputTypes += `, `
+    // }
+    // if (inputNames.length) {
+    //     inputNames += `, `
+    // }
     inputNames += `overrides`
 
     if (options.isStaticCall || fn.stateMutability === 'pure' || fn.stateMutability === 'view') {
