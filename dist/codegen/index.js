@@ -39,6 +39,7 @@ function codegenContractTypings(contract, codegenConfig) {
     }, source) +
         '\n' +
         `import { ${contract.name}, ${contract.name}__factory } from "../index"
+     import type { PromiseOrValue } from "../common";
      import { useProvider, useSigner } from "wagmi";
      import { useQuery, useMutation } from "@tanstack/react-query";
     `;
