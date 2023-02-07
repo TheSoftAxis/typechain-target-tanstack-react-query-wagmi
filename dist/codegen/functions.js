@@ -26,7 +26,6 @@ function generateFunction(options, fn, contractName, overloadedName) {
     inputNames += `overrides`
 
     if (options.isStaticCall || fn.stateMutability === 'pure' || fn.stateMutability === 'view') {
-        inputTypes += `overrides?: CallOverrides`
         return `
     ${generateFunctionDocumentation(fn.documentation)}
     ${`use${(0, typechain_1.normalizeName)(fn.name)}Query`} = (${inputTypes}) => {
