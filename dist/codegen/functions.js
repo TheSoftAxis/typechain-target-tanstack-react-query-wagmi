@@ -23,8 +23,6 @@ function generateFunction(options, fn, contractName, overloadedName) {
     let inputTypes = (0, types_1.generateInputTypes)(fn.inputs, { useStructs: true })
     let inputNames = (0, types_1.generateInputNames)(fn.inputs)
     
-    inputNames += `overrides`
-
     if (options.isStaticCall || fn.stateMutability === 'pure' || fn.stateMutability === 'view') {
         return `
     ${generateFunctionDocumentation(fn.documentation)}
@@ -37,6 +35,7 @@ function generateFunction(options, fn, contractName, overloadedName) {
     };
   `;
     }
+    inputNames += `overrides`
     if (fn.stateMutability === 'payable') {
         inputTypes += `overrides?: PayableOverrides & { from?: PromiseOrValue<string> }`
     } else {
