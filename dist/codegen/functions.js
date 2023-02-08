@@ -35,11 +35,9 @@ function generateFunction(options, fn, contractName, overloadedName) {
     };
   `;
     }
-    inputNames += `overrides`
     if (fn.stateMutability === 'payable') {
+        inputNames += `overrides`
         inputTypes += `overrides?: PayableOverrides & { from?: PromiseOrValue<string> }`
-    } else {
-        inputTypes += `overrides?: Overrides & { from?: PromiseOrValue<string> }`
     }
     return `
   ${generateFunctionDocumentation(fn.documentation)}
